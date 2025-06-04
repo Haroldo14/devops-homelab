@@ -1,0 +1,31 @@
+VAGRANTFILE_API_VERSION = "2"
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+  # Global configuration for all machines
+  config.vm.box = "ubuntu/jammy64"
+
+  # Configuration for kubemaster
+  config.vm.define "kubemaster" do |kubemaster|
+  config.vm.synced_folder ".", "/vagrant", owner: "vagrant"
+ #config.vm.synced_folder "/mnt/0A3C99CC3C99B365/VIRTUALBOX", "/vagrant"
+    kubemaster.vm.hostname = "kubemaster"
+    kubemaster.vm.network :private_network, ip: "192.168.56.2"
+    kubemaster.vm.provider "virtualbox" do |vb|
+      vb.name = "master"
+      vb.memory = "4096"
+      vb.cpus = 2
+    end
+  end
+
+  # Configuration for kubeworker
+  config.vm.define "kubeworker" do |kubeworker|
+  config.vm.synced_folder ".", "/vagrant", owner: "vagrant"
+    #config.vm.synced_folder "/mnt/0A3C99CC3C99B365/VIRTUALBOX", "/vagrant"
+    kubeworker.vm.hostname = "kubeworker"
+    kubeworker.vm.network :private_network, ip: "192.168.56.3"
+    kubeworker.vm.provider "virtualbox" do |vb|
+      vb.name = "worker"
+      vb.memory = "2048"
+      vb.cpus = 2
+    end
+  end
+end
